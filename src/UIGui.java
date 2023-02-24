@@ -1,6 +1,11 @@
 import javax.swing.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
 
 public class UIGui extends JFrame{
+    private ArrayList<String> history = new ArrayList<>();
+
     private JTextField calculateText;
     private JButton a2Button;
     private JButton a5Button;
@@ -22,8 +27,12 @@ public class UIGui extends JFrame{
     private JButton equalsbutton;
     private JButton decimalpoint;
     private JButton deleteButton;
+    private JButton exponenButton;
+    private JTextArea historyArea;
+    private JScrollPane historyScroll;
 
     public UIGui(){
+        history.add("");
         setTitle("EMDAS Calculator");
         setContentPane(UIPanel);
         setVisible(true);
@@ -86,6 +95,11 @@ public class UIGui extends JFrame{
 
 
         //special button
+        exponenButton.addActionListener(e -> {
+            String one ="^";
+            one = calculateText.getText() + one;
+            calculateText.setText(one);
+        });
         decimalpoint.addActionListener(e -> {
             String one =".";
             one = calculateText.getText() + one;
@@ -95,12 +109,8 @@ public class UIGui extends JFrame{
             String one = calculateText.getText();
             calculateText.setText(one.substring(0,one.length()-1));
         });
-        clearButton.addActionListener(e -> {
-            calculateText.setText("");
-        });
-        exitButton.addActionListener(e -> {
-            System.exit(0);
-        });
+        clearButton.addActionListener(e -> calculateText.setText(""));
+        exitButton.addActionListener(e -> System.exit(0));
 
 
 
@@ -133,6 +143,7 @@ public class UIGui extends JFrame{
 
 
         equalsbutton.addActionListener(e ->{
+            String his = calculateText.getText();
             try{
                 String notation = calculateText.getText();
                 UILogic logic = new UILogic();
@@ -145,12 +156,17 @@ public class UIGui extends JFrame{
                 //prints out double if list contains double else integer
                 if(numOne>0||numTwo>0){
                     calculateText.setText(String.format("%.2f",resultDouble));
+                    history.add(his+" = "+calculateText.getText()+"\n");
                 }else {
                     calculateText.setText( String.valueOf((int) resultDouble));
+                    history.add(his+" = "+calculateText.getText()+"\n");
                 }
             }catch (Exception exception){
                 System.out.println("Equation Error");
             }
+            historyArea.setText(String.valueOf(history).replaceAll("^\\[|]$|,+",""));
         });
+
     }
+
 }
