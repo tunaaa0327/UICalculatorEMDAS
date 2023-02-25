@@ -1,6 +1,6 @@
 import javax.swing.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class UIGui extends JFrame{
@@ -30,6 +30,7 @@ public class UIGui extends JFrame{
     private JButton exponenButton;
     private JTextArea historyArea;
     private JScrollPane historyScroll;
+    private JButton clearHistButton;
 
     public UIGui(){
         history.add("");
@@ -106,8 +107,17 @@ public class UIGui extends JFrame{
             calculateText.setText(one);
         });
         deleteButton.addActionListener(e -> {
-            String one = calculateText.getText();
-            calculateText.setText(one.substring(0,one.length()-1));
+            try{
+                String one = calculateText.getText();
+                calculateText.setText(one.substring(0,one.length()-1));
+            }catch (Exception exception){
+                calculateText.setText("Nothing to Delete");
+            }
+        });
+
+        clearHistButton.addActionListener(e -> {
+            history.removeAll(history);
+            historyArea.setText("");
         });
         clearButton.addActionListener(e -> calculateText.setText(""));
         exitButton.addActionListener(e -> System.exit(0));
@@ -147,6 +157,7 @@ public class UIGui extends JFrame{
             try{
                 String notation = calculateText.getText();
                 UILogic logic = new UILogic();
+
                 String resultString = String.format("%.2f", logic.myProcess(notation));
                 double resultDouble = Double.parseDouble(resultString);
                 int div = resultString.indexOf(".");//checks index of decimal point exist
@@ -165,6 +176,16 @@ public class UIGui extends JFrame{
                 System.out.println("Equation Error");
             }
             historyArea.setText(String.valueOf(history).replaceAll("^\\[|]$|,+",""));
+        });
+
+        calculateText.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getKeyCode()==10){
+                    equalsbutton.doClick();
+                }
+            }
         });
 
     }

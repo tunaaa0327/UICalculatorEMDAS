@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -15,6 +16,9 @@ public class UILogic{
 
         ArrayList<String> resultList = myResultNotation(notationList);//final answer
         String resultString = String.join("",resultList);//list to string
+        if(resultString.contains("Infinity")){
+            JOptionPane.showMessageDialog(null,"Output is Infinity", "Information",JOptionPane.INFORMATION_MESSAGE);
+        }
         double resultDouble = Double.parseDouble(resultString);//string to double
 
 
@@ -22,6 +26,7 @@ public class UILogic{
         int div = resultString.indexOf(".");//checks index of decimal point exist
         int numOne = Integer.parseInt(String.valueOf(resultString.charAt(div+1)));
         int numTwo = Integer.parseInt(String.valueOf(resultString.charAt(div+2)));
+
 
 
         //prints out double if list contains double else integer
